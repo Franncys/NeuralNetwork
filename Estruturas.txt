@@ -1,0 +1,11 @@
+Carregar Imagens
+
+imagens.tipo
+imagens.id
+imagens.caminho
+imagens.matriz
+
+circulo = 0
+quadrado = 1
+triangulo = 2
+estrela = 3
