@@ -27,7 +27,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'tansig'   -> (Tangente Hiperbolica)
     
     net.layers{1}.transferFcn = 'tansig'; %Interna
-    net.layers{2}.transferFcn = 'tansig'; %Saida
+    net.layers{2}.transferFcn = 'purelin'; %Saida
      
     
     net.trainParam.epochs = 500;        %Numero maximo de ciclos de treino
