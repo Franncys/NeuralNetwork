@@ -30,11 +30,11 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     net.layers{2}.transferFcn = 'tansig'; %Saida
      
     
-    net.trainParam.epochs = 1000;     %Numero maximo de ciclos de treino
-    net.divideFcn = 'divideblock';    %Percentagem de exemplos de treino e teste   
-    net.divideParam.trainRatio = 0.5;
-    net.divideParam.valRatio = 0.25;
-    net.divideParam.testRatio = 0.25;
+    net.trainParam.epochs = 500;        %Numero maximo de ciclos de treino
+    net.divideFcn = '';        %Percentagem de exemplos de treino e teste 'divideblock'
+%     net.divideParam.trainRatio = 0.7;
+%     net.divideParam.valRatio = 0.15;
+%     net.divideParam.testRatio = 0.15;
 
     %treinar rede
     [net, tr] = train(net, input, target);

@@ -5,7 +5,7 @@ addpath(genpath('./Imagens'));
 caminhoAtual = mfilename( 'fullpath' );
 caminho = fullfile(caminhoAtual, 'Imagens\Formas_1\');
 disp(caminho);
-caminho = 'D:\Armazenamento\GitHub\NeuralNetwork\Imagens\Formas_1';
+caminho = 'D:\Armazenamento\GitHub\NeuralNetwork\Imagens\Formas_2';
 %Extrair Dados
 imagens = carregarImagens(caminho, 1);
 %Gerar input e target
@@ -17,6 +17,6 @@ target = obterTargets(imagens);
 %target = targetNomeImagens(imagens);
 %disp(imagens.matriz);
 %Topologia pode ser 'feedfowardnet', 'patternnet', 'cascadeforwardnet', 'fitnet'
-topologia = 'feedfowardnet'
+topologia = 'cascadeforwardnet'
 NeuralNetwork(topologia,input, target);
 end

@@ -71,6 +71,19 @@ else
             imagens(im).tipo = name;
             imagens(im).caminho = caminhoFoto;
             imagens(im).matriz = getMatrizBinaria(caminhoFoto, escala)
+            
+            if strcmp(imagens(j).tipo,'circle')
+                tipo = 0;
+            elseif strcmp(imagens(j).tipo, 'square')
+                tipo = 1;
+            elseif strcmp(imagens(j).tipo, 'triangle')   
+                tipo = 2;
+            else
+                tipo = 3;
+            end
+            
+            imagens(im).codTipo = tipo;
+            
             im = im + 1;
         end
         
