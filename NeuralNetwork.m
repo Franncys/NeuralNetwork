@@ -15,6 +15,8 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'traingd'  -> (Gradient Descent backpropagation)
     %'traingdx' -> (Gradient descent with momentum and adaptive learning rate backpropagation)
     %'trainlm'  -> (Levenberg-Marquardt backpropagation)
+    %'trainrp'  -> ?(Resilient backpropagation)
+    %'trainoss' -> ?(One-step secant backpropagation)
     
     net.trainFcn = 'traingd';
     
