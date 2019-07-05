@@ -15,6 +15,10 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'traingd'  -> (Gradient Descent backpropagation)
     %'traingdx' -> (Gradient descent with momentum and adaptive learning rate backpropagation)
     %'trainlm'  -> (Levenberg-Marquardt backpropagation)
+    %'trainrp'  -> (Resilient backpropagation)
+    %'trainbfg' -> (BFGS(é um algoritmo)quasi-Newton backpropagation
+    %'trainoss' -> (One-step secant backpropagation)
+    %'trainscg' -> (Scaled conjugate gradient backpropagation)
     
     net.trainFcn = 'traingd';
     
@@ -27,14 +31,14 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'tansig'   -> (Tangente Hiperbolica)
     
     net.layers{1}.transferFcn = 'tansig'; %Interna
-    net.layers{2}.transferFcn = 'tansig'; %Saida
+    net.layers{2}.transferFcn = 'purelin'; %Saida
      
     
     net.trainParam.epochs = 1000;     %Numero maximo de ciclos de treino
-    net.divideFcn = 'divideblock';    %Percentagem de exemplos de treino e teste   
-    net.divideParam.trainRatio = 0.5;
-    net.divideParam.valRatio = 0.25;
-    net.divideParam.testRatio = 0.25;
+    net.divideFcn = '';    %Percentagem de exemplos de treino e teste   
+%     net.divideParam.trainRatio = 0.5;
+%     net.divideParam.valRatio = 0.25;
+%     net.divideParam.testRatio = 0.25;
 
     %treinar rede
     [net, tr] = train(net, input, target);

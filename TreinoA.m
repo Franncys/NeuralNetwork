@@ -5,7 +5,7 @@ addpath(genpath('./Imagens'));
 caminhoAtual = mfilename( 'fullpath' );
 caminho = fullfile(caminhoAtual, 'Imagens\Formas_1\');
 disp(caminho);
-caminho = 'D:\Armazenamento\GitHub\NeuralNetwork\Imagens\Formas_1';
+caminho = 'C:\Users\Asus\Documents\GitHub\NeuralNetwork\Imagens\Formas_1';
 %Extrair Dados
 imagens = carregarImagens(caminho, 1);
 %Gerar input e target
