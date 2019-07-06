@@ -6,9 +6,9 @@ function target = obterTarget(imagens)
             elseif strcmp(imagens(i).tipo, 'square')
                 tipo = [0,0,1,0];
             elseif strcmp(imagens(i).tipo, 'triangle')   
-                tipo = [0,0,1,1];
-            else
                 tipo = [0,1,0,0];
+            else
+                tipo = [1,0,0,0];
             end
         target(:,i) = tipo;
     end

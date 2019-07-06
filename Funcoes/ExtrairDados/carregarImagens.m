@@ -1,7 +1,7 @@
 function imagens = carregarImagens(caminho)
 
 disp(pwd);
-caminho = fullfile(pwd, 'Imagens\Formas_1\');
+caminho = fullfile(pwd, caminho);
 disp(caminho);
 
 %Verificar se o diretório existe
