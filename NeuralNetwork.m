@@ -18,7 +18,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'trainrp'  -> ?(Resilient backpropagation)
     %'trainoss' -> ?(One-step secant backpropagation)
     
-    net.trainFcn = 'traingd';
+    net.trainFcn = 'trainoss';
     
     %Funcao de ativacao
     %Podem ser:
@@ -32,7 +32,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     net.layers{2}.transferFcn = 'purelin'; %Saida
      
     
-    net.trainParam.epochs = 500;        %Numero maximo de ciclos de treino
+    net.trainParam.epochs = 750;        %Numero maximo de ciclos de treino
     net.divideFcn = '';        %Percentagem de exemplos de treino e teste 'divideblock'
 %     net.divideParam.trainRatio = 0.7;
 %     net.divideParam.valRatio = 0.15;
