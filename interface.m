@@ -22,7 +22,7 @@ function varargout = interface(varargin)
 
 % Edit the above text to modify the response to help interface
 
-% Last Modified by GUIDE v2.5 06-Jul-2019 13:54:34
+% Last Modified by GUIDE v2.5 06-Jul-2019 23:39:47
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,7 +55,6 @@ function interface_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for interface
 handles.output = hObject;
 %Variables
-handles.scale = 175;
 handles.path_to_files = './Imagens/'; 
 
 %Train Variables
@@ -120,7 +119,9 @@ function activation_pop_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns activation_pop contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from activation_pop
-
+contents = cellstr(get(hObject,'String'));
+selected = contents{get(hObject,'Value')}
+disp(selected);
 
 % --- Executes during object creation, after setting all properties.
 function activation_pop_CreateFcn(hObject, eventdata, handles)
@@ -249,9 +250,7 @@ imagens = carregarImagens(selectedDataset{1,1}, handles.scale);
 input = inputfromImageExtration(imagens, handles.scale);
 target = targetCodigoSubEspecie(imagens);
 
-end
-
-
+%--END Function
 
 % --- Executes on button press in savingnet_push.
 function savingnet_push_Callback(hObject, eventdata, handles)
@@ -277,9 +276,9 @@ function hiddenlayers_slider_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
+    if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
 
 
 % --- Executes on slider movement.
