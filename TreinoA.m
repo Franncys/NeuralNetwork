@@ -2,7 +2,7 @@ function TreinoA()
 addpath(genpath('./Funcoes'));
 addpath(genpath('./Imagens'));
 
-caminho = '\Imagens\Formas_1';
+caminho = '\Imagens\Formas_2';
 %Extrair Dados
 imagens = carregarImagens(caminho);
 %Gerar input e target
