@@ -1,9 +1,8 @@
-function imagens = carregarImagens(caminho, escala)
+function imagens = carregarImagens(caminho)
 
-%Caminho genérico usado para testes
-%caminho = 'D:\Armazenamento\ISEC\2_Ano\Conhecimento e Raciocinio\Trabalho Prático\Enunciado e Ficheiros-20190604\TemaRN_Imagens_\Formas_1';
-%Escala genérica para as Fotos
-%escala = 0.5
+disp(pwd);
+caminho = fullfile(pwd, 'Imagens\Formas_1\');
+disp(caminho);
 
 %Verificar se o diretório existe
 if ~isdir(caminho)
@@ -39,7 +38,7 @@ if subPastas == 0
             imagens(j).id = id;
             imagens(j).tipo = split{1,2};
             imagens(j).caminho = caminhoFoto;
-            imagens(j).matriz = getMatrizBinaria(caminhoFoto, escala)
+            imagens(j).matriz = getMatrizBinaria(caminhoFoto)
             
             if strcmp(imagens(j).tipo,'circle')
                 tipo = 0;
@@ -70,13 +69,13 @@ else
             imagens(im).id = id;
             imagens(im).tipo = name;
             imagens(im).caminho = caminhoFoto;
-            imagens(im).matriz = getMatrizBinaria(caminhoFoto, escala)
+            imagens(im).matriz = getMatrizBinaria(caminhoFoto)
             
-            if strcmp(imagens(j).tipo,'circle')
+            if strcmp(imagens(im).tipo,'circle')
                 tipo = 0;
-            elseif strcmp(imagens(j).tipo, 'square')
+            elseif strcmp(imagens(im).tipo, 'square')
                 tipo = 1;
-            elseif strcmp(imagens(j).tipo, 'triangle')   
+            elseif strcmp(imagens(im).tipo, 'triangle')   
                 tipo = 2;
             else
                 tipo = 3;

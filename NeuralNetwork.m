@@ -89,5 +89,17 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     accuracyTeste = r/size(tr.testInd,2)*100;
     %------------------------- DEBUG
     fprintf('Precisao teste %f\n', accuracyTeste)
- 
+    
+    old_dir = pwd;
+    saveLocationNN = fullfile(old_dir, 'TrainedNN\');
+    cd (saveLocationNN);
+    nr_files=dir(['*.mat']);
+    nr_files=size(nr_files,1);
+    nr_files=num2str(nr_files);
+    name = {['NN', nr_files]};
+    name = name{1,1};
+    NN = net;
+    save(name,'NN');
+    disp(name);
+    cd (old_dir);
 end
