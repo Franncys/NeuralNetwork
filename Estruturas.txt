@@ -9,3 +9,14 @@ circulo = 0
 quadrado = 1
 triangulo = 2
 estrela = 3
+
+Estrutura da rede neuronal------------
+
+NNparam.topologia
+NNparam.fAtivacao
+NNparam.fTreino
+NNparam.neuronios
+NNparam.trainRatio
+NNparam.valRatio
+NNparam.testRatio
+NNparam.max_fail

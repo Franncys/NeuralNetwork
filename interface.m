@@ -22,7 +22,7 @@ function varargout = interface(varargin)
 
 % Edit the above text to modify the response to help interface
 
-% Last Modified by GUIDE v2.5 05-Jul-2019 12:53:12
+% Last Modified by GUIDE v2.5 06-Jul-2019 02:34:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -54,6 +54,22 @@ function interface_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for interface
 handles.output = hObject;
+%Variables
+handles.scale = 175;
+handles.path_to_files = './Imagens/'; 
+
+%Train Variables
+handles.currentTrainNN = 'EMPTY';
+
+%Simulation Variables
+handles.currentSimulationNN = 'EMPTY';
+handles.hasData = 0;
+handles.dataSetUsed = 'EMPTY';
+handles.SimulationUsed = 'EMPTY';
+handles.time = 0;
+
+%Classificaion Variable
+handles.currentImage = 'EMPTY';
 
 % Update handles structure
 guidata(hObject, handles);
@@ -73,19 +89,19 @@ function varargout = interface_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+% --- Executes on selection change in topology_pop.
+function topology_pop_Callback(hObject, eventdata, handles)
+% hObject    handle to topology_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+% Hints: contents = cellstr(get(hObject,'String')) returns topology_pop contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from topology_pop
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+function topology_pop_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to topology_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -96,19 +112,19 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in popupmenu2.
-function popupmenu2_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu2 (see GCBO)
+% --- Executes on selection change in activation_pop.
+function activation_pop_Callback(hObject, eventdata, handles)
+% hObject    handle to activation_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu2
+% Hints: contents = cellstr(get(hObject,'String')) returns activation_pop contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from activation_pop
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu2 (see GCBO)
+function activation_pop_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to activation_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -119,19 +135,19 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in popupmenu3.
-function popupmenu3_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu3 (see GCBO)
+% --- Executes on selection change in training_pop.
+function training_pop_Callback(hObject, eventdata, handles)
+% hObject    handle to training_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu3 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu3
+% Hints: contents = cellstr(get(hObject,'String')) returns training_pop contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from training_pop
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu3 (see GCBO)
+function training_pop_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to training_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -142,19 +158,19 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in popupmenu4.
-function popupmenu4_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu4 (see GCBO)
+% --- Executes on selection change in dataset_pop.
+function dataset_pop_Callback(hObject, eventdata, handles)
+% hObject    handle to dataset_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu4 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu4
+% Hints: contents = cellstr(get(hObject,'String')) returns dataset_pop contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from dataset_pop
 
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu4_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu4 (see GCBO)
+function dataset_pop_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to dataset_pop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -182,5 +198,30 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in trainingnet_push.
+function trainingnet_push_Callback(hObject, eventdata, handles)
+% hObject    handle to trainingnet_push (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+set(handles.figure1, 'pointer', 'watch')
+drawnow;
+
+all_topologias = get(handles.pop_topologia,'String');
+NNparam.topologia = all_topologias(get(handles.topology_pop,'Value'),:);
+NNparam.topologia = NNparam.topologia{1,1};
+    
+    
+end
+
+
+
+% --- Executes on button press in savingnet_push.
+function savingnet_push_Callback(hObject, eventdata, handles)
+% hObject    handle to savingnet_push (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
