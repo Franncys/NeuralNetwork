@@ -1,10 +1,5 @@
-function [net] = TrainNN(caminhoNN) 
-    %Eliminar no Fim
-    caminhoNet = fullfile(pwd, 'TrainedNN\NN3.mat');
-    net = load(caminhoNet);
-    net = net.NN;
-    caminho = 'Imagens/Formas_3';
-    imagens = carregarImagens(caminho);
+function [net, accuracyTotal, target, outT] = TrainNN(net, dataSet)
+    imagens = carregarImagens(dataSet);
     
     %Ir buscar os inputs e outputs
     input = obterMatriz(imagens);
@@ -20,10 +15,10 @@ function [net] = TrainNN(caminhoNN)
     
     %simular/testar rede neuronal
     out = sim(net, input);
-    
+    outT = out;
     %VISUALIZAR DESEMPENHO
     %------------------------- DEBUG
-    plotconfusion(target, out) % Matriz de confusao
+    %plotconfusion(target, out) % Matriz de confusao
     %------------------------- DEBUG
     plotperf(tr)         % Grafico com o desempenho da rede nos 3 conjuntos    
    

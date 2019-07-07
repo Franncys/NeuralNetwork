@@ -10,7 +10,7 @@ function varargout = interface(varargin)
 %      function named CALLBACK in INTERFACE.M with the given input arguments.
 %
 %      INTERFACE('Property','Value',...) creates a new INTERFACE or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
+%      existing singleton*. Starting from the left, property value pairs are
 %      applied to the GUI before interface_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
 %      stop.  All inputs are passed to interface_OpeningFcn via varargin.
@@ -22,7 +22,7 @@ function varargout = interface(varargin)
 
 % Edit the above text to modify the response to help interface
 
-% Last Modified by GUIDE v2.5 07-Jul-2019 20:32:16
+% Last Modified by GUIDE v2.5 07-Jul-2019 22:55:10
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -293,7 +293,8 @@ NNparam.testRatio = 0.15;
 
 %- Input and Output Generation
 imagens = carregarImagens(NNparam.dataSet)
-input = obterMatriz(imagens);
+%input = obterMatriz(imagens);
+input = retirarExtremos(imagens);
 target = obterTargets(imagens);
 
 %Train
@@ -544,3 +545,16 @@ data = get(handles.uitable2,'Data');
 ColumnName=get(handles.uitable2,'ColumnName');
 CombData=[ColumnName';data];
 xlswrite([path file], CombData);
+
+
+% --- Executes on button press in pushbutton10.
+function pushbutton10_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[handles.testNN, precisao, target, out ]= TrainNN(handles.testNN, handles.testDataSet);
+set(findobj('Tag','text28'),'String',precisao);
+plotconfusion(target, out);
+guidata(hObject, handles);
+
+

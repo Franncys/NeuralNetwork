@@ -1,5 +1,5 @@
 function input = retirarExtremos(imagens)
-    escala = 50;
+    escala = 60;
     
     T = numel(imagens);
 
@@ -22,17 +22,15 @@ function input = retirarExtremos(imagens)
         end    
     end
     input = 1;
-%     for i = 1 : T
-%         points = detectHarrisFeatures(imagens(i).matriz);
-%         disp(points);
-%         points = points.selectStrongest(escala).Location;
-%         
-%         imshow(imagens(i).matriz); hold on;
-%         plot(points);
-%         
-%         points = points(1:min_points);
-%         input(1:min_points,i) = points;
-%             
-%         
-%     end
+    for i = 1 : T
+        points = detectHarrisFeatures(imagens(i).matriz);
+        disp(points);
+        points = points.selectStrongest(escala).Location;
+        
+        imshow(imagens(i).matriz); hold on;
+        plot(points);
+        
+        points = points(1:min_points);
+        input(1:min_points,i) = points;    
+    end
 end
