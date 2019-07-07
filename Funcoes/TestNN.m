@@ -1,10 +1,6 @@
-function [precisao] = TestNN(caminhoNet, input, target)
-    %Eliminar no Fim
-    caminhoNet = fullfile(pwd, 'TrainedNN\NN4.mat');
-    net = load(caminhoNet);
-    net = net.NN;
-    caminho = 'Imagens/Formas_2';
-    imagens = carregarImagens(caminho);
+function [accuracyTotal, nCertas, nErradas] = TestNN(NN, caminhoImagens)
+    net = NN;
+    imagens = carregarImagens(caminhoImagens);
     
     %Ir buscar os inputs e outputs
     input = obterMatriz(imagens);
@@ -17,7 +13,7 @@ function [precisao] = TestNN(caminhoNet, input, target)
     
     %VISUALIZAR DESEMPENHO
     %------------------------- DEBUG
-    plotconfusion(target, result) % Matriz de confusao
+    %plotconfusion(target, result) % Matriz de confusao
    
     %Calcular e mostrar a percentagem de classificacoes corretas no total dos exemplos
     r=0;
@@ -29,7 +25,8 @@ function [precisao] = TestNN(caminhoNet, input, target)
           r = r+1;
       end
     end
-
+    nCertas = r;
+    nErradas = size(result,2) - r;
     accuracyTotal = r/size(result,2)*100;
     %------------------------- DEBUG
     fprintf('Precisao total %f\n', accuracyTotal)

@@ -79,6 +79,8 @@ handles.neurons = 10;
 handles.epochs = 500;
 handles.divide = 'Nao';
 handles.trainedNN = 'Empty';
+handles.testNN = 'Empty';
+handles.testDataSet = 'Empty';
 
 %Classificaion Variable
 handles.currentImage = 'EMPTY';
@@ -463,7 +465,19 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+[file,path] = uigetfile('*.mat');
+try
+   NN = load([path file]);
+   NN = NN.NN;
+catch exception
+   NN = 'EMPTY';
+   errordlg('Por favor carregue uma rede neuronal','NN not found');
+end
 
+if strcmp(NN, 'EMPTY') ~= 1
+    handles.testNN = NN;
+    guidata(hObject, handles);
+end
 
 % --- Executes on selection change in popupmenu6.
 function popupmenu6_Callback(hObject, eventdata, handles)
@@ -473,7 +487,9 @@ function popupmenu6_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu6 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu6
-
+contents = cellstr(get(hObject,'String'));
+handles.testDataSet = contents{get(hObject,'Value')};
+guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu6_CreateFcn(hObject, eventdata, handles)
@@ -493,3 +509,11 @@ function pushbutton8_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+[precisao nCertas nErradas] = TestNN(handles.testNN, handles.testDataSet);
+set(findobj('Tag','text24'),'String',nCertas);
+set(findobj('Tag','text26'),'String',nErradas);
+set(findobj('Tag','text28'),'String',precisao);
+guidata(hObject, handles);
+
+
+
