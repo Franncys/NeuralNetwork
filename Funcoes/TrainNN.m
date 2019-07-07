@@ -1,41 +1,15 @@
-function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, input, target)
-    switch topologia
-        case 'feedfowardnet' 
-            net = feedforwardnet([10]);    
-        case 'patternnet' 
-            net = patternnet([10]);
-        case 'cascadeforwardnet' 
-            net = cascadeforwardnet([10]);
-        case 'fitnet' 
-            net = fitnet([10]);       
-    end 
+function [net] = TrainNN(caminhoNN) 
+    %Eliminar no Fim
+    caminhoNet = fullfile(pwd, 'TrainedNN\NN3.mat');
+    net = load(caminhoNet);
+    net = net.NN;
+    caminho = 'Imagens/Formas_3';
+    imagens = carregarImagens(caminho);
     
-    %Funcao de treino
-    %Podem Ser:
-    %'traingd'  -> (Gradient Descent backpropagation)
-    %'traingdx' -> (Gradient descent with momentum and adaptive learning rate backpropagation)
-    %'trainlm'  -> (Levenberg-Marquardt backpropagation)
+    %Ir buscar os inputs e outputs
+    input = obterMatriz(imagens);
+    target = obterTargets(imagens);
     
-    net.trainFcn = 'traingd';
-    
-    %Funcao de ativacao
-    %Podem ser:
-    %'hardlim'  -> (Degrau) 
-    %'hardlims' -> (Sinal) 
-    %'logsig'   -> (Sigmoide)
-    %'purelin'  -> (Linear) 
-    %'tansig'   -> (Tangente Hiperbolica)
-    
-    net.layers{1}.transferFcn = 'tansig'; %Interna
-    net.layers{2}.transferFcn = 'tansig'; %Saida
-     
-    
-    net.trainParam.epochs = 1000;     %Numero maximo de ciclos de treino
-    net.divideFcn = 'divideblock';    %Percentagem de exemplos de treino e teste   
-    net.divideParam.trainRatio = 0.5;
-    net.divideParam.valRatio = 0.25;
-    net.divideParam.testRatio = 0.25;
-
     %treinar rede
     [net, tr] = train(net, input, target);
     
@@ -87,5 +61,17 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     accuracyTeste = r/size(tr.testInd,2)*100;
     %------------------------- DEBUG
     fprintf('Precisao teste %f\n', accuracyTeste)
- 
+    
+    old_dir = pwd;
+    saveLocationNN = fullfile(old_dir, 'TrainedNN\');
+    cd (saveLocationNN);
+    nr_files=dir(['*.mat']);
+    nr_files=size(nr_files,1);
+    nr_files=num2str(nr_files);
+    name = {['NN', nr_files]};
+    name = name{1,1};
+    NN = net;
+    save(name,'NN');
+    disp(name);
+    cd (old_dir);
 end
