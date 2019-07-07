@@ -22,7 +22,7 @@ function varargout = interface(varargin)
 
 % Edit the above text to modify the response to help interface
 
-% Last Modified by GUIDE v2.5 07-Jul-2019 17:02:55
+% Last Modified by GUIDE v2.5 07-Jul-2019 20:32:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,6 +68,7 @@ handles.hasData = 0;
 handles.dataSetUsed = 'EMPTY';
 handles.SimulationUsed = 'EMPTY';
 handles.time = 0;
+handles.dataTable = 'Empty';
 
 %NN Training
 handles.topology = 'FeedForwardNet';
@@ -252,13 +253,13 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 result = ClassificaImagem(handles.currentClassificationNN, handles.caminhoImagem);
 switch result
     case 1 
-        res = 'Estrela';
+        res = 'Star';
     case 2 
-        res = 'Triangulo';
+        res = 'Triangle';
     case 3 
-        res = 'Quadrado';
+        res = 'Square';
     case 4
-        res = 'Circulo';      
+        res = 'Circle';      
 end 
 set(findobj('Tag','text18'),'String',res);
 
@@ -507,11 +508,38 @@ function pushbutton8_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[precisao nCertas nErradas] = TestNN(handles.testNN, handles.testDataSet);
+[precisao nCertas nErradas data Esperado Obtido] = TestNN(handles.testNN, handles.testDataSet);
+t = handles.uitable2;
+CheckTable1 = get(t,'Data');
+CheckTable1 = data;
 set(findobj('Tag','text24'),'String',nCertas);
 set(findobj('Tag','text26'),'String',nErradas);
 set(findobj('Tag','text28'),'String',precisao);
+count = length(Esperado);
+for i = 1 : count 
+    newData{i,1} = Esperado{i};
+    newData{i,2} = Obtido{i};
+%     if(strcmp(Esperado{i}, Obtido{i}) == 1)
+%         set(handles.uitable2,'BackgroundColor',[0 1 0]);
+%     else
+%         set(handles.uitable2,'BackgroundColor',[1 0 0]);
+%     end
+    set(handles.uitable2,'Data',newData);
+end
+handles.dataTable = handles.uitable2;
 guidata(hObject, handles);
 
 
 
+
+
+% --- Executes on button press in pushbutton9.
+function pushbutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+[file,path] = uiputfile('*.xls');
+data = get(handles.uitable2,'Data');
+ColumnName=get(handles.uitable2,'ColumnName');
+CombData=[ColumnName';data];
+xlswrite([path file], CombData);

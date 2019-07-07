@@ -28,9 +28,12 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input,
     %'purelin'  -> (Linear) 
     %'tansig'   -> (Tangente Hiperbolica)
     
-    net.layers{1}.transferFcn = NNparam.actFunc; %Interna
-    net.layers{2}.transferFcn = 'purelin'; %Saida
-     
+    for i = 1 : length(NNparam.neurons)
+        net.layers{i}.transferFcn = NNparam.actFunc; %Interna
+    end
+    
+    net.layers{i + 1}.transferFcn = 'purelin'; %Saida    
+    
     net.trainParam.epochs = NNparam.epochs;        %Numero maximo de ciclos de treino
    
     switch NNparam.divide

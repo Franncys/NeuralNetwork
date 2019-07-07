@@ -1,11 +1,13 @@
-function [accuracyTotal, nCertas, nErradas] = TestNN(NN, caminhoImagens)
+function [accuracyTotal, nCertas, nErradas, data, Esperado, Obtido] = TestNN(NN, caminhoImagens)
     net = NN;
     imagens = carregarImagens(caminhoImagens);
     
     %Ir buscar os inputs e outputs
-    input = obterMatriz(imagens);
+    [input, tipoEsperado] = obterTipo(imagens);
+    Esperado = string(tipoEsperado(:));
+    data(:,1) = Esperado;    
     target = obterTargets(imagens);
-    
+       
     result = net(input);
     disp(result);
     %simular/testar rede neuronal
@@ -24,7 +26,22 @@ function [accuracyTotal, nCertas, nErradas] = TestNN(NN, caminhoImagens)
       if b == d                       % se estao na mesma linha, a classificacao foi correta (incrementa 1)
           r = r+1;
       end
+      switch b
+        case 1 
+            data(i,2) = "star";
+            Obtido{i} = 'star';
+        case 2 
+            data(i,2) = "triangle";
+            Obtido{i} = 'triangle';
+        case 3 
+            data(i,2) = "square";
+            Obtido{i} = 'square';
+        case 4
+            data(i,2) = "circle";    
+            Obtido{i} = 'circle';   
+       end 
     end
+    Obtido = Obtido(:);
     nCertas = r;
     nErradas = size(result,2) - r;
     accuracyTotal = r/size(result,2)*100;
