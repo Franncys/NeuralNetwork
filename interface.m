@@ -22,7 +22,7 @@ function varargout = interface(varargin)
 
 % Edit the above text to modify the response to help interface
 
-% Last Modified by GUIDE v2.5 06-Jul-2019 23:39:47
+% Last Modified by GUIDE v2.5 07-Jul-2019 01:55:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -61,7 +61,6 @@ handles.path_to_files = './Imagens/';
 handles.currentTrainNN = 'EMPTY';
 
 %Simulation Variables
-handles.topology = 'EMPTY';
 handles.caminhoImagem = 'Empty'
 handles.currentSimulationNN = 'EMPTY';
 handles.loadedNN = 'NN';
@@ -69,6 +68,14 @@ handles.hasData = 0;
 handles.dataSetUsed = 'EMPTY';
 handles.SimulationUsed = 'EMPTY';
 handles.time = 0;
+
+%NN Training
+handles.topology = 'Empty';
+handles.actFunc = 'Empty';
+handles.trainFunc = 'Empty';
+handles.dataSet = 'Empty';
+handles.hiddenLayers = 1;
+handles.neurons = 10;
 
 %Classificaion Variable
 handles.currentImage = 'EMPTY';
@@ -101,6 +108,7 @@ function topology_pop_Callback(hObject, eventdata, handles)
 contents = cellstr(get(hObject,'String'));
 selected = contents{get(hObject,'Value')};
 handles.topology = selected;
+guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function topology_pop_CreateFcn(hObject, eventdata, handles)
@@ -125,7 +133,8 @@ function activation_pop_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from activation_pop
 contents = cellstr(get(hObject,'String'));
 selected = contents{get(hObject,'Value')}
-disp(selected);
+handles.actFunc = selected;
+guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function activation_pop_CreateFcn(hObject, eventdata, handles)
@@ -148,7 +157,10 @@ function training_pop_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns training_pop contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from training_pop
-
+contents = cellstr(get(hObject,'String'));
+selected = contents{get(hObject,'Value')}
+handles.trainFunc = selected;
+guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function training_pop_CreateFcn(hObject, eventdata, handles)
@@ -171,7 +183,10 @@ function dataset_pop_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns dataset_pop contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from dataset_pop
-
+contents = cellstr(get(hObject,'String'));
+selected = contents{get(hObject,'Value')}
+handles.dataSet = selected;
+guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function dataset_pop_CreateFcn(hObject, eventdata, handles)
@@ -230,6 +245,18 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+result = ClassificaImagem(handles.currentClassificationNN, handles.caminhoImagem);
+switch result
+    case 1 
+        res = 'Estrela';
+    case 2 
+        res = 'Triangulo';
+    case 3 
+        res = 'Quadrado';
+    case 4
+        res = 'Circulo';      
+end 
+set(findobj('Tag','text18'),'String',res);
 
 
 % --- Executes on button press in trainingnet_push.
@@ -238,47 +265,48 @@ function trainingnet_push_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-set(handles.figure1, 'pointer', 'watch')
-drawnow;
+%set(handles.figure1, 'pointer', 'watch')
+%drawnow;
 
-all_topologias = get(handles.pop_topologia,'String');
-NNparam.topologia = all_topologias(get(handles.topology_pop,'Value'),:);
-NNparam.topologia = NNparam.topologia{1,1};
+NNparam.topology = handles.topology;
+NNparam.actFunc = handles.actFunc;
+NNparam.trainFunc = handles.trainFunc;
+NNparam.dataSet = handles.dataSet;
+NNparam.hiddenLayers = handles.hiddenLayers;
+NNparam.neurons = handles.neurons;
+% 
+% all_fAtivacao = get(handles.activaition_pop,'String');
+% NNparam.fAtivacao = all_fAtivacao(get(handles.activaition_pop,'Value'),:);
+% NNparam.fAtivacao = NNparam.fAtivacao{1,1};
+%     
+% all_fTreino = get(handles.training_pop,'String');
+% NNparam.fTreino = all_fTreino(get(handles.training_pop,'Value'),:);
+% NNparam.fTreino = NNparam.fTreino{1,1};   
+% 
+% selectedDataset = get(handles.dataset_pop,'String');
+% selectedDataset = selectedDataset(get(handles.dataset_pop,'Value'),:);
+% 
+% selectedDataset = strcat(handles.path_to_files, selectedDataset);
 
-all_fAtivacao = get(handles.activaition_pop,'String');
-NNparam.fAtivacao = all_fAtivacao(get(handles.activaition_pop,'Value'),:);
-NNparam.fAtivacao = NNparam.fAtivacao{1,1};
-    
-all_fTreino = get(handles.training_pop,'String');
-NNparam.fTreino = all_fTreino(get(handles.training_pop,'Value'),:);
-NNparam.fTreino = NNparam.fTreino{1,1};   
+hiddenLayers = NNparam.hiddenLayers;
 
-selectedDataset = get(handles.dataset_pop,'String');
-selectedDataset = selectedDataset(get(handles.dataset_pop,'Value'),:);
+neurons = NNparam.neurons;
 
-selectedDataset = strcat(handles.path_to_files, selectedDataset);
-
-hiddenLayers = get(handles.hiddenlayers_slider,'Value');
-hiddenLayers = floor(hiddenLayers)
-
-neurons = get(handles.neuronios_slider,'Value');
-neurons = floor(neurons)
-
-A(1:1,1:hiddenLayers) = neurons;
+A(1:1,1:hiddenLayers) = NNparam.neurons;
 
 %Default param
-NNparam.neuronios = A;
+NNparam.neurons = A;
 NNparam.trainRatio = 0.7;
 NNparam.valRatio = 0.15;
 NNparam.testRatio = 0.15;
-NNparam.max_fail = 10;
-
-imagens = carregarImagens(selectedDataset{1,1}, handles.scale);
+%NNparam.max_fail = 10;
 
 %- Input and Output Generation
-input = inputfromImageExtration(imagens, handles.scale);
-target = targetCodigoSubEspecie(imagens);
+imagens = carregarImagens(NNparam.dataSet)
+input = obterMatriz(imagens);
+target = obterTargets(imagens);
 
+NeuralNetwork(NNparam, input, target);
 %--END Function
 
 % --- Executes on button press in savingnet_push.
@@ -296,6 +324,9 @@ function hiddenlayers_slider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+handles.hiddenLayers = floor(get(hObject,'Value'));
+set(findobj('Tag','text14'),'String',handles.hiddenLayers);
+guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -318,7 +349,9 @@ function neuronios_slider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+handles.neurons = floor(get(hObject,'Value'));
+set(findobj('Tag','text16'),'String',handles.neurons);
+guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
 function neuronios_slider_CreateFcn(hObject, eventdata, handles)
@@ -330,3 +363,10 @@ function neuronios_slider_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function text18_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text18 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called

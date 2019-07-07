@@ -1,12 +1,12 @@
-function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, input, target)
-    switch topologia
-        case 'feedfowardnet' 
-            net = feedforwardnet([10]);    
-        case 'patternnet' 
-            net = patternnet([10]);
-        case 'cascadeforwardnet' 
-            net = cascadeforwardnet([10]);
-        case 'fitnet' 
+function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input, target)
+    switch NNparam.topology
+        case 'FeedFowardNet' 
+            net = feedforwardnet(NNparam.neurons);    
+        case 'PatternNet' 
+            net = patternnet(NNparam.neurons);
+        case 'CascadeForwardNet' 
+            net = cascadeforwardnet(NNparam.neurons);
+        case 'FitNet' 
             net = fitnet([10]);       
     end 
     
@@ -18,7 +18,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'trainrp'  -> ?(Resilient backpropagation)
     %'trainoss' -> ?(One-step secant backpropagation)
     
-    net.trainFcn = 'trainoss';
+    net.trainFcn = NNparam.trainFunc;
     
     %Funcao de ativacao
     %Podem ser:
@@ -28,7 +28,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'purelin'  -> (Linear) 
     %'tansig'   -> (Tangente Hiperbolica)
     
-    net.layers{1}.transferFcn = 'tansig'; %Interna
+    net.layers{1}.transferFcn = NNparam.actFunc; %Interna
     net.layers{2}.transferFcn = 'purelin'; %Saida
      
     
@@ -51,7 +51,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     
     %VISUALIZAR DESEMPENHO
     %------------------------- DEBUG
-    plotconfusion(target, out) % Matriz de confusao
+    %plotconfusion(target, out) % Matriz de confusao
     %------------------------- DEBUG
     plotperf(tr)         % Grafico com o desempenho da rede nos 3 conjuntos    
    
