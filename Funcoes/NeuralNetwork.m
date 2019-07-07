@@ -42,8 +42,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input,
         case 'Nao'
             net.divideFcn = '';   
     end 
-
-
+    
     %treinar rede
     [net, tr] = train(net, input, target);
     

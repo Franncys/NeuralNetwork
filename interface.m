@@ -111,8 +111,7 @@ function topology_pop_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns topology_pop contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from topology_pop
 contents = cellstr(get(hObject,'String'));
-selected = contents{get(hObject,'Value')};
-handles.topology = selected;
+handles.topology = contents{get(hObject,'Value')};
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
