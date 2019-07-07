@@ -10,9 +10,9 @@ function input = retirarExtremos(imagens)
         disp(points);
         points = points.selectStrongest(escala);
         
-        imshow(imagens(i).matriz); 
-        hold on;
-        plot(points);
+%         imshow(imagens(i).matriz); 
+%         hold on;
+%         plot(points);
         
         size_points = size(points);
         size_points = size_points(1,1);
@@ -27,8 +27,8 @@ function input = retirarExtremos(imagens)
         disp(points);
         points = points.selectStrongest(escala).Location;
         
-        imshow(imagens(i).matriz); hold on;
-        plot(points);
+%         imshow(imagens(i).matriz); hold on;
+%         plot(points);
         
         points = points(1:min_points);
         input(1:min_points,i) = points;    

@@ -293,8 +293,8 @@ NNparam.testRatio = 0.15;
 
 %- Input and Output Generation
 imagens = carregarImagens(NNparam.dataSet)
-%input = obterMatriz(imagens);
-input = retirarExtremos(imagens);
+input = obterMatriz(imagens);
+%input = retirarExtremos(imagens);
 target = obterTargets(imagens);
 
 %Train
