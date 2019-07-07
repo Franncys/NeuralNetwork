@@ -61,7 +61,10 @@ handles.path_to_files = './Imagens/';
 handles.currentTrainNN = 'EMPTY';
 
 %Simulation Variables
+handles.topology = 'EMPTY';
+handles.caminhoImagem = 'Empty'
 handles.currentSimulationNN = 'EMPTY';
+handles.loadedNN = 'NN';
 handles.hasData = 0;
 handles.dataSetUsed = 'EMPTY';
 handles.SimulationUsed = 'EMPTY';
@@ -95,8 +98,9 @@ function topology_pop_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 % Hints: contents = cellstr(get(hObject,'String')) returns topology_pop contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from topology_pop
-
-
+contents = cellstr(get(hObject,'String'));
+selected = contents{get(hObject,'Value')};
+handles.topology = selected;
 
 % --- Executes during object creation, after setting all properties.
 function topology_pop_CreateFcn(hObject, eventdata, handles)
@@ -187,14 +191,39 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+[file,path] = uigetfile('*.mat');
+try
+   NN = load([path file]);
+   NN = NN.NN;
+catch exception
+   NN = 'EMPTY';
+   errordlg('Por favor carregue uma rede neuronal','NN not found');
+end
 
+if strcmp(NN, 'EMPTY') ~= 1
+    handles.currentClassificationNN = NN;
+    guidata(hObject, handles);
+end
 
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+[file,path] = uigetfile('*.png');
+try
+   caminhoImagem = fullfile(path, file);
+   disp(caminhoImagem);
+catch exception
+   caminhoImagem = 'EMPTY';
+   errordlg('Por favor carregue uma iamgem','Image not found');
+end
 
+if strcmp(caminhoImagem, 'EMPTY') ~= 1
+    handles.caminhoImagem = caminhoImagem;
+    guidata(hObject, handles);
+    imshow(caminhoImagem);
+end
 
 % --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)

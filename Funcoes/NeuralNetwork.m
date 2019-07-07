@@ -15,12 +15,10 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     %'traingd'  -> (Gradient Descent backpropagation)
     %'traingdx' -> (Gradient descent with momentum and adaptive learning rate backpropagation)
     %'trainlm'  -> (Levenberg-Marquardt backpropagation)
-    %'trainrp'  -> (Resilient backpropagation)
-    %'trainbfg' -> (BFGS(é um algoritmo)quasi-Newton backpropagation
-    %'trainoss' -> (One-step secant backpropagation)
-    %'trainscg' -> (Scaled conjugate gradient backpropagation)
+    %'trainrp'  -> ?(Resilient backpropagation)
+    %'trainoss' -> ?(One-step secant backpropagation)
     
-    net.trainFcn = 'traingd';
+    net.trainFcn = 'trainoss';
     
     %Funcao de ativacao
     %Podem ser:
@@ -34,11 +32,11 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     net.layers{2}.transferFcn = 'purelin'; %Saida
      
     
-    net.trainParam.epochs = 1000;     %Numero maximo de ciclos de treino
-    net.divideFcn = '';    %Percentagem de exemplos de treino e teste   
-%     net.divideParam.trainRatio = 0.5;
-%     net.divideParam.valRatio = 0.25;
-%     net.divideParam.testRatio = 0.25;
+    net.trainParam.epochs = 750;        %Numero maximo de ciclos de treino
+    net.divideFcn = '';        %Percentagem de exemplos de treino e teste 'divideblock'
+%     net.divideParam.trainRatio = 0.7;
+%     net.divideParam.valRatio = 0.15;
+%     net.divideParam.testRatio = 0.15;
 
     %treinar rede
     [net, tr] = train(net, input, target);
@@ -91,5 +89,17 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(topologia, inpu
     accuracyTeste = r/size(tr.testInd,2)*100;
     %------------------------- DEBUG
     fprintf('Precisao teste %f\n', accuracyTeste)
- 
+    
+    old_dir = pwd;
+    saveLocationNN = fullfile(old_dir, 'TrainedNN\');
+    cd (saveLocationNN);
+    nr_files=dir(['*.mat']);
+    nr_files=size(nr_files,1);
+    nr_files=num2str(nr_files);
+    name = {['NN', nr_files]};
+    name = name{1,1};
+    NN = net;
+    save(name,'NN');
+    disp(name);
+    cd (old_dir);
 end
