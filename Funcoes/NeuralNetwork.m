@@ -1,4 +1,4 @@
-function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input, target)
+function [net, tr, accuracyTotal, accuracyTeste, target, outT] = NeuralNetwork(NNparam, input, target, handles)
     switch NNparam.topology
         case 'FeedFowardNet' 
             net = feedforwardnet(NNparam.neurons);    
@@ -56,12 +56,12 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input,
     
     %simular/testar rede neuronal
     out = sim(net, input);
-    
+    outT = out;
     %VISUALIZAR DESEMPENHO
     %------------------------- DEBUG
-    %plotconfusion(target, out) % Matriz de confusao
+    %plotconfusion(target, out); % Matriz de confusao
     %------------------------- DEBUG
-    plotperf(tr)         % Grafico com o desempenho da rede nos 3 conjuntos    
+    plotperf(tr);         % Grafico com o desempenho da rede nos 3 conjuntos    
    
     %Calcular e mostrar a percentagem de classificacoes corretas no total dos exemplos
     r=0;

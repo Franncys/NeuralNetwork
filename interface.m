@@ -297,8 +297,9 @@ input = obterMatriz(imagens);
 target = obterTargets(imagens);
 
 %Train
-[net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input, target);
+[net, tr, accuracyTotal, accuracyTeste, target, out] = NeuralNetwork(NNparam, input, target, handles);
 
+plotconfusion(target, out);
 %Save Trained NN
 handles.trainedNN = net;
 
