@@ -22,7 +22,7 @@ function varargout = interface(varargin)
 
 % Edit the above text to modify the response to help interface
 
-% Last Modified by GUIDE v2.5 07-Jul-2019 01:55:56
+% Last Modified by GUIDE v2.5 07-Jul-2019 17:02:55
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -70,12 +70,15 @@ handles.SimulationUsed = 'EMPTY';
 handles.time = 0;
 
 %NN Training
-handles.topology = 'Empty';
-handles.actFunc = 'Empty';
-handles.trainFunc = 'Empty';
-handles.dataSet = 'Empty';
+handles.topology = 'FeedForwardNet';
+handles.actFunc = 'logsig';
+handles.trainFunc = 'trainosss';
+handles.dataSet = 'Formas_1';
 handles.hiddenLayers = 1;
 handles.neurons = 10;
+handles.epochs = 500;
+handles.divide = 'Nao';
+handles.trainedNN = 'Empty';
 
 %Classificaion Variable
 handles.currentImage = 'EMPTY';
@@ -265,32 +268,17 @@ function trainingnet_push_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%set(handles.figure1, 'pointer', 'watch')
-%drawnow;
-
+%Set NNparam Variables
 NNparam.topology = handles.topology;
 NNparam.actFunc = handles.actFunc;
 NNparam.trainFunc = handles.trainFunc;
 NNparam.dataSet = handles.dataSet;
 NNparam.hiddenLayers = handles.hiddenLayers;
 NNparam.neurons = handles.neurons;
-% 
-% all_fAtivacao = get(handles.activaition_pop,'String');
-% NNparam.fAtivacao = all_fAtivacao(get(handles.activaition_pop,'Value'),:);
-% NNparam.fAtivacao = NNparam.fAtivacao{1,1};
-%     
-% all_fTreino = get(handles.training_pop,'String');
-% NNparam.fTreino = all_fTreino(get(handles.training_pop,'Value'),:);
-% NNparam.fTreino = NNparam.fTreino{1,1};   
-% 
-% selectedDataset = get(handles.dataset_pop,'String');
-% selectedDataset = selectedDataset(get(handles.dataset_pop,'Value'),:);
-% 
-% selectedDataset = strcat(handles.path_to_files, selectedDataset);
-
+NNparam.epochs = handles.epochs;
+NNparam.divide = handles.divide;
+ 
 hiddenLayers = NNparam.hiddenLayers;
-
-neurons = NNparam.neurons;
 
 A(1:1,1:hiddenLayers) = NNparam.neurons;
 
@@ -306,7 +294,17 @@ imagens = carregarImagens(NNparam.dataSet)
 input = obterMatriz(imagens);
 target = obterTargets(imagens);
 
-NeuralNetwork(NNparam, input, target);
+%Train
+[net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input, target);
+
+%Save Trained NN
+handles.trainedNN = net;
+
+%Update GUI
+set(findobj('Tag','text12'),'String',accuracyTotal);
+set(findobj('Tag','text11'),'String',accuracyTeste);
+guidata(hObject, handles); %Update Handles
+
 %--END Function
 
 % --- Executes on button press in savingnet_push.
@@ -314,6 +312,23 @@ function savingnet_push_Callback(hObject, eventdata, handles)
 % hObject    handle to savingnet_push (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+%[file,path] = uiputfile('*.mat');
+% old_dir = pwd;
+% saveLocationNN = fullfile(path, file);
+% cd (path);
+% save(file,'handles.trainedNN');
+old_dir = pwd;
+saveLocationNN = fullfile(old_dir, 'TrainedNN\');
+cd (saveLocationNN);
+nr_files=dir(['*.mat']);
+nr_files=size(nr_files,1);
+nr_files=num2str(nr_files);
+name = {['NN', nr_files]};
+name = name{1,1};
+NN = handles.trainedNN;
+save(name,'NN');
+cd (old_dir);
+
 
 
 % --- Executes on slider movement.
@@ -370,3 +385,111 @@ function text18_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to text18 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on selection change in popupmenu5.
+function popupmenu5_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu5 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu5
+contents = cellstr(get(hObject,'String'));
+handles.divide = contents{get(hObject,'Value')};
+guidata(hObject, handles);
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on slider movement.
+function slider4_Callback(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+function edit1_Callback(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit1 as text
+%        str2double(get(hObject,'String')) returns contents of edit1 as a double
+handles.epochs = str2num(get(hObject,'String'));
+guidata(hObject, handles);
+
+% --- Executes during object creation, after setting all properties.
+function edit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on selection change in popupmenu6.
+function popupmenu6_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu6 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu6
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton8.
+function pushbutton8_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

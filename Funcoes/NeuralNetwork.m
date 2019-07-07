@@ -7,7 +7,7 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input,
         case 'CascadeForwardNet' 
             net = cascadeforwardnet(NNparam.neurons);
         case 'FitNet' 
-            net = fitnet([10]);       
+            net = fitnet(NNparam.neurons);       
     end 
     
     %Funcao de treino
@@ -31,12 +31,18 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input,
     net.layers{1}.transferFcn = NNparam.actFunc; %Interna
     net.layers{2}.transferFcn = 'purelin'; %Saida
      
-    
-    net.trainParam.epochs = 750;        %Numero maximo de ciclos de treino
-    net.divideFcn = '';        %Percentagem de exemplos de treino e teste 'divideblock'
-%     net.divideParam.trainRatio = 0.7;
-%     net.divideParam.valRatio = 0.15;
-%     net.divideParam.testRatio = 0.15;
+    net.trainParam.epochs = NNparam.epochs;        %Numero maximo de ciclos de treino
+   
+    switch NNparam.divide
+        case 'Sim' 
+            net.divideFcn = 'divideblock'; %Percentagem de exemplos de treino e teste 'divideblock'
+            net.divideParam.trainRatio = 0.7;
+            net.divideParam.valRatio = 0.15;
+            net.divideParam.testRatio = 0.15;
+        case 'Nao'
+            net.divideFcn = '';   
+    end 
+
 
     %treinar rede
     [net, tr] = train(net, input, target);
@@ -89,17 +95,4 @@ function [net, tr, accuracyTotal, accuracyTeste] = NeuralNetwork(NNparam, input,
     accuracyTeste = r/size(tr.testInd,2)*100;
     %------------------------- DEBUG
     fprintf('Precisao teste %f\n', accuracyTeste)
-    
-    old_dir = pwd;
-    saveLocationNN = fullfile(old_dir, 'TrainedNN\');
-    cd (saveLocationNN);
-    nr_files=dir(['*.mat']);
-    nr_files=size(nr_files,1);
-    nr_files=num2str(nr_files);
-    name = {['NN', nr_files]};
-    name = name{1,1};
-    NN = net;
-    save(name,'NN');
-    disp(name);
-    cd (old_dir);
 end
